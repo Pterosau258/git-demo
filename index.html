@@ -1,18 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>祝李华生日快乐！</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <p>所谓千秋霸业，
-    万古流芳，与一件事相比，
-    其实都算不了什么，这件事情就是用
-    你喜欢的方式度过一生。
-  </p>
+    <div class="container">
+        <h1 class="birthday-title">🎂 祝胡奕彬生日快乐！🎂</h1>
+        <p class="message">愿你拥有美好的一年，充满欢笑和惊喜！</p>
+        <div class="cake">
+            <div class="layer layer-1"></div>
+            <div class="layer layer-2"></div>
+            <div class="layer layer-3"></div>
+            <div class="candle">
+                <div class="flame"></div>
+            </div>
+        </div>
+        <button id="surpriseBtn">点击有惊喜</button>
+    </div>
+    
+    <canvas id="confetti"></canvas>
+    
+    <script>
+        // 蛋糕点击效果
+        const cake = document.querySelector('.cake');
+        const candle = document.querySelector('.candle');
+        const flame = document.querySelector('.flame');
+        
+        cake.addEventListener('click', () => {
+            flame.classList.toggle('out');
+            if (flame.classList.contains('out')) {
+                setTimeout(() => {
+                    flame.style.display = 'none';
+                }, 500);
+            } else {
+                flame.style.display = 'block';
+                setTimeout(() => {
+                    flame.classList.remove('out');
+                }, 10);
+            }
+        });
+        
+        // 惊喜按钮
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const confettiCanvas = document.getElementById('confetti');
+        
+        // 设置画布尺寸
+        function resizeCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        surpriseBtn.addEventListener('click', () => {
+            createConfetti();
+        });
+        
+        // 彩色纸屑效果
+        function createConfetti() {
+            const ctx = confettiCanvas.getContext('2d');
+            const particles = [];
+            const particleCount = 300;
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8000'];
+            
+            // 初始化粒子
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: -20,
+                    radius: Math.random() * 5 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speed: Math.random() * 3 + 2,
+                    angle: Math.random() * Math.PI * 2,
+                    angularVelocity: Math.random() * 0.2 - 0.1
+                });
+            }
+            
+            // 动画循环
+            function animate() {
+                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                
+                let activeParticles = 0;
+                
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    
+                    p.y += p.speed;
+                    p.x += Math.sin(p.angle);
+                    p.angle += p.angularVelocity;
+                    
+                    if (p.y < confettiCanvas.height) {
+                        activeParticles++;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                }
+                
+                if (activeParticles > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                }
+            }
+            
+            animate();
+        }
+        
+        // 标题动画
+        const title = document.querySelector('.birthday-title');
+        setInterval(() => {
+            const colors = ['#ff0000', '#ff8000', '#ffff00', '#00ff00', '#0080ff', '#0000ff', '#8000ff'];
+            title.style.color = colors[Math.floor(Math.random() * colors.length)];
+        }, 1000);
+    </script>
 </body>
-
 </html>
